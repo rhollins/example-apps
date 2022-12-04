@@ -1,0 +1,9 @@
+FROM dependency-cache:latest as cache
+COPY --chown=gradle:gradle . /home/gradle/source
+WORKDIR /home/gradle/source
+RUN gradle clean build --stacktrace --no-daemon
+
+FROM openjdk:11-jre-slim
+COPY --from=cache /home/gradle/source/build/libs/spring-hello-world.jar /app/
+WORKDIR /app
+ENTRYPOINT ["java", "-jar", "spring-hello-world.jar"]

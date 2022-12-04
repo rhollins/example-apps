@@ -1,0 +1,7 @@
+FROM gradle:6.4.1-jdk11 as gradleimage
+COPY --chown=gradle:gradle . /home/gradle/source
+WORKDIR /home/gradle/source
+RUN gradle clean build --stacktrace --no-daemon
+
+FROM gradle:6.4.1-jdk11
+COPY --from=gradleimage /root/.gradle /root/.gradle
